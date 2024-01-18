@@ -11,7 +11,7 @@ def formatar_cep(cep):
 
 def formatar_endereco(n):
   n1 = str(n).split(' ')[0].split('-')[0]
-  if n1 == 'SN' or n1 == 'SN1' or n1 == 'S/N':
+  if n1 == 'SN' or n1 == 'SN1' or n1 == 'S/N' or n1 == 'SN(1)':
     return 'SN'
   if n1.isnumeric():
     return n1
@@ -41,7 +41,7 @@ df_empresas['CEP'] = df_empresas['CEP'].apply(lambda cep: formatar_cep(cep))
 df_vivo['CEP_ENDERECO'] = df_vivo['CEP'].map(str) + '-' + df_vivo['NUM']
 df_empresas['CEP_ENDERECO'] = df_empresas['CEP'].map(str) + '-' + df_empresas['Número']
 
-new_data_frame = pd.merge(df_empresas, df_vivo, how='left', on='CEP_ENDERECO')
+new_data_frame = pd.merge(df_vivo, df_empresas, how='inner', on='CEP_ENDERECO')
 
 new_data_frame.drop_duplicates(subset=['Razão', 'CNPJ', 'Telefone 1'], inplace=True)
 new_data_frame.dropna(subset=['CNPJ', 'Telefone 1', 'Razão'])
